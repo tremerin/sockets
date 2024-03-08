@@ -1,3 +1,5 @@
+//Obtener las direcciones IP asociadas a un nombre de host 
+
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <stdio.h>
@@ -5,22 +7,22 @@
 
 int main(int ac, char **av)
 {
-	struct addrinfo hints;           // Indications pour getaddrinfo()
-	struct addrinfo *res;            // Résultat de getaddrinfo()
+	struct addrinfo hints;           // Parametros para getaddrinfo()
+	struct addrinfo *res;            // Resultado de getaddrinfo()
 	struct addrinfo *r;              // Pointeur pour itérer sur les résultats
-	int status;                      // Valeur de retour de getaddrinfo()
-	char buffer[INET6_ADDRSTRLEN];   // Buffer pour reconvertir l'adresse IP
+	int status;                      // Valor de retorno de getaddrinfo()
+	char buffer[INET6_ADDRSTRLEN];   // Buffer para reconvertir la direccion IP
 
 	if (ac != 2)
 	{
 		fprintf(stderr, "usage: /a.out hostname\n");
 		return (1);
 	}
-	memset(&hints, 0, sizeof hints);  // Initialise la structure
-	hints.ai_family = AF_UNSPEC;      // IPv4 ou IPv6
-	hints.ai_socktype = SOCK_STREAM;  // TCP
+	memset(&hints, 0, sizeof hints);  // Inicializa la estructura
+	hints.ai_family = AF_UNSPEC;      // AF_UNSPEC = IPv4 o IPv6, AF_INET = IPv4, AF_INET6 = IPv6
+	hints.ai_socktype = SOCK_STREAM;  // SOCK_STREAM = TCP, SOCK_DGRAM = UDP
 
-	// Récupère la ou les adresses IP associées
+	// Recupera las direcciones IP asociadas
 	status = getaddrinfo(av[1], 0, &hints, &res);
 	if (status != 0)
 	{
