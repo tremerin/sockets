@@ -6,28 +6,28 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define PORT 4242  // le port de notre serveur
-#define BACKLOG 10 // nombre max de demandes de connexion
+#define PORT 4242  // puerto del servidor
+#define BACKLOG 10 // maxmo conexiones del servidor
 
 int main(void)
 {
     printf("---- SERVER ----\n\n");
     struct sockaddr_in sa;
-    int socket_fd;
-    int client_fd;
+    int socket_fd; //socket donde el servidor recive las peticiones
+    int client_fd; //despues de una peticion para hablar con el cliente
     int status;
     struct sockaddr_storage client_addr; 
     socklen_t addr_size;
     char buffer[BUFSIZ];
     int bytes_read;
 
-    // on prépare l'adresse et le port pour la socket de notre serveur
+    // direccion y puerto para el socket del servidor
     memset(&sa, 0, sizeof sa);
     sa.sin_family = AF_INET; // IPv4
     sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
     sa.sin_port = htons(PORT);
 
-    // on crée la socket, on a lit et on écoute dessus
+    // creacion del socket
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
         fprintf(stderr, "socket fd error: %s\n", strerror(errno));
@@ -35,6 +35,7 @@ int main(void)
     }
     printf("Created server socket fd: %d\n", socket_fd);
 
+    // liga el socket con una direccion
     status = bind(socket_fd, (struct sockaddr *)&sa, sizeof sa);
     if (status != 0) {
         fprintf(stderr, "bind error: %s\n", strerror(errno));
@@ -42,6 +43,7 @@ int main(void)
     }
     printf("Bound socket to localhost port %d\n", PORT);
 
+    // pone al socket en modo escucha
     printf("Listening on port %d\n", PORT);
     status = listen(socket_fd, BACKLOG);
     if (status != 0) {
@@ -49,7 +51,7 @@ int main(void)
         return (3);
     }
 
-    // on accepte une connexion entrante
+    // crea el socket para hablar con el cliente despues de aceptar una peticion
     addr_size = sizeof client_addr;
     client_fd = accept(socket_fd, (struct sockaddr *)&client_addr, &addr_size);
     if (client_fd == -1) {
@@ -58,7 +60,7 @@ int main(void)
     }
     printf("Accepted new connection on client socket fd: %d\n", client_fd);
 
-    // on recoit un message via la socket client
+    // recibe el mensaje del cliente desde el socket cliente
     bytes_read = 1;
     while (bytes_read >= 0) {
         printf("Reading client socket %d\n", client_fd);
@@ -72,8 +74,7 @@ int main(void)
             break ;
         }
         else {
-            // Si on a bien reçu un message, on va l'imprimer
-            // puis renvoyer un message au client
+            // imprime el mesanje  completo
             char *msg = "Got your message.";
             int msg_len = strlen(msg);
             int bytes_sent;
@@ -94,10 +95,10 @@ int main(void)
         }
     }
 
-    printf("Closing client socket\n");
-    close(client_fd);
-    printf("Closing server socket\n");
-    close(socket_fd);
+    printf("Closing client socket\n"); 
+    close(client_fd); // cierra el socket que hablaba con el cliente
+    printf("Closing server socket\n"); 
+    close(socket_fd); // cierra el socket propio del server
 
     return (0);
 }

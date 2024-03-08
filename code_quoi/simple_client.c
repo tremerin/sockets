@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define PORT 4242  // le port du serveur auquel on va se connecter
+#define PORT 4242  // puerto al que intentara conectar
 
 int main(int ac, char **av)
 {
@@ -25,13 +25,13 @@ int main(int ac, char **av)
         return (1);
     }
 
-    // on prépare l'adresse et le port auquel on veut se connecter
+    // la direccion a la intentara conectar el cliente
     memset(&sa, 0, sizeof sa);
     sa.sin_family = AF_INET; // IPv4
     sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
     sa.sin_port = htons(PORT);
 
-    // on crée la socket et on la connecte au serveur distant
+    // crea el socket
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
         fprintf(stderr, "socket fd error: %s\n", strerror(errno));
@@ -39,6 +39,7 @@ int main(int ac, char **av)
     }
     printf("Created socket fd: %d\n", socket_fd);
 
+    // intenta conectar el socket a la direccion del servidor
     status = connect(socket_fd, (struct sockaddr *)&sa, sizeof sa);
     if (status != 0) {
         fprintf(stderr, "connect error: %s\n", strerror(errno));
@@ -46,7 +47,7 @@ int main(int ac, char **av)
     }
     printf("Connected socket to localhost port %d\n", PORT);
 
-    // on envoie un message au serveur
+    // envia un mensaje al servidor
     msg = av[1];
     msg_len = strlen(msg);
     bytes_sent = send(socket_fd, msg, msg_len, 0);
@@ -60,7 +61,7 @@ int main(int ac, char **av)
         printf("Sent partial message: %d bytes sent.\n", bytes_sent);
     }
         
-    // on attend de recevoir un message via la socket
+    // recive el mensaje del servidor
     bytes_read = 1;
     while (bytes_read >= 0) {
         bytes_read = recv(socket_fd, buffer, BUFSIZ, 0);
@@ -73,7 +74,6 @@ int main(int ac, char **av)
             break ;
         }
         else {
-            // Si on a bien reçu un message, on va l'imprimer
             buffer[bytes_read] = '\0';
             printf("Message received: \"%s\"\n", buffer);
             break ;
