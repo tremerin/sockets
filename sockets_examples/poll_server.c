@@ -9,7 +9,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#define PORT 4242  // our server's port
+#define PORT 4242  // socket server
 
 int		create_server_socket(void);
 void	accept_new_connection(int server_socket, struct pollfd **poll_fds, int *poll_count, int *poll_size);
