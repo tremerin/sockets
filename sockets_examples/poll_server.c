@@ -87,11 +87,13 @@ int	main(void)
 			{
 				// Socket is our listening server socket
 				accept_new_connection(server_socket, &poll_fds, &poll_count, &poll_size);
+				// crear los usuarios del server
 			}
 			else
 			{
 				// Socket is a client socket, read it
 				read_data_from_socket(i, &poll_fds, &poll_count, server_socket);
+				// interpretar las acciones de los usuarios
 			}
 		}
 	}
