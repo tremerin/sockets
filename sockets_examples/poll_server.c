@@ -194,7 +194,8 @@ void read_data_from_socket(int i, struct pollfd **poll_fds, int *poll_count, int
 			if (dest_fd != server_socket && dest_fd != sender_fd)
 			{
 				status = send(dest_fd, msg_to_send, strlen(msg_to_send), 0);
-				if (status == -1) {
+				if (status == -1)
+				{
 					fprintf(stderr, "[Server] Send error to client fd %d: %s\n", dest_fd, strerror(errno));
 				}
 			}
