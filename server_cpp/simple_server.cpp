@@ -8,11 +8,12 @@
 #include <iostream>
 
 #define PORT 4242  // puerto del servidor
-#define BACKLOG 10 // maxmo conexiones del servidor
+#define BACKLOG 10 // maximo de conexiones del servidor
 
 int main(void)
 {
-    std::cout << "---- SERVER ----\n\n" << std::endl;
+    std::string hello = "hola";
+    std::cout << "--- - SERVER - ---\n\n" << std::endl;
     struct sockaddr_in sa;
     int socket_fd; //socket donde el servidor recive las peticiones
     int client_fd; //despues de una peticion para hablar con el cliente
@@ -23,7 +24,7 @@ int main(void)
     int bytes_read;
 
     // direccion y puerto para el socket del servidor
-    memset(&sa, 0, sizeof sa);
+    //memset(&sa, 0, sizeof sa);
     sa.sin_family = AF_INET; // IPv4
     sa.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1, localhost
     sa.sin_port = htons(PORT);
@@ -32,6 +33,7 @@ int main(void)
     socket_fd = socket(sa.sin_family, SOCK_STREAM, 0);
     if (socket_fd == -1) {
         fprintf(stderr, "socket fd error: %s\n", strerror(errno));
+        //std::cerr << "socket fd error: " <<  strerror(errno) << std::endl;
         return (1);
     }
     printf("Created server socket fd: %d\n", socket_fd);
@@ -66,15 +68,18 @@ int main(void)
     while (bytes_read >= 0) {
         printf("Reading client socket %d\n", client_fd);
         bytes_read = recv(client_fd, buffer, BUFSIZ, 0);
-        if (bytes_read == 0) {
+        if (bytes_read == 0)
+        {
             printf("Client socket %d: closed connection.\n", client_fd);
             break ;
         }
-        else if (bytes_read == -1) {
+        else if (bytes_read == -1)
+        {
             fprintf(stderr, "recv error: %s\n", strerror(errno));
             break ;
         }
-        else {
+        else
+        {
             // imprime el mesanje  completo
             const char *msg = "Got your message.";
             int msg_len = strlen(msg);
