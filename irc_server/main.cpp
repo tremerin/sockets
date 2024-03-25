@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:04 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/23 17:49:52 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/23 20:56:58 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int main(int argc, char **argv)
 	{
 		// validar y pasar argumentos
 		Server server(4242, argv[2]);
+		server.initServer();
+		server.serverLoop();
 	}
 	else
 	{

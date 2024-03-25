@@ -44,8 +44,6 @@ int	main(void)
 	}
 
 	// Prepare the array of file descriptors for poll()
-	// We'll start with enough room for 5 fds in the array,
-	// we'll reallocate if necessary
 	poll_size = 5;
 	poll_fds = calloc(poll_size + 1, sizeof *poll_fds);
 	if (!poll_fds)
@@ -62,7 +60,8 @@ int	main(void)
 	{
 		// Poll sockets to see if they are ready (2 second timeout)
 		status = poll(poll_fds, poll_count, 2000);
-		if (status == -1) {
+		if (status == -1)
+		{
 			fprintf(stderr, "[Server] Poll error: %s\n", strerror(errno));
 			exit(1);
 		}

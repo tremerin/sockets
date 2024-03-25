@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:27 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/23 18:04:18 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/23 20:24:51 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ private:
 	int						_port;
 
 	//client sockets:
-	struct pollfd 			*poll_fds;
-	int						poll_size;
-	int						poll_count;
+	struct pollfd 			_poll_fds[20];
+	int						_poll_size;
+	int						_poll_count;
 
 	//server
 	std::string				_password;
@@ -41,6 +41,7 @@ public:
 	~Server();
 
 	void initServer(void);
+	void serverLoop(void);
 };
 
 #endif
