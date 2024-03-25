@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:15 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/23 20:58:23 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/25 19:15:27 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int createServerSocket(int port)
 	// Prepare the address and port for the server socket
 	sAddress.sin_family = AF_INET;                     // IPv4
 	sAddress.sin_addr.s_addr = htonl(INADDR_LOOPBACK); // 127.0.0.1
-	sAddress.sin_port = htons(port);                   // Port   
+	sAddress.sin_port = htons(port);                   // Port
 	// Create server socket
 	socket_fd = socket(sAddress.sin_family, SOCK_STREAM, 0);
 	if (socket_fd == -1)
@@ -68,7 +68,7 @@ static void accept_new_connection(int server_socket, struct pollfd *poll_fds, in
 		return ;
 	}
 	//add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
-	if (*poll_count == *poll_size)
+	if (*poll_count < *poll_size)
 	{
 		poll_fds[*poll_count].fd = client_fd;
 		poll_fds[*poll_count].events = POLLIN;
@@ -140,7 +140,7 @@ void Server::serverLoop(void)
 	while (1)
 	{
  		// Poll sockets to see if they are ready (2 second timeout)
-		status = poll(_poll_fds, _poll_count, 2000);
+		status = poll(&_poll_fds[0], _poll_count, 2000);
 		if (status == -1)
 		{
 			std::cout << "Poll error: " << errno << std::endl;
@@ -158,7 +158,6 @@ void Server::serverLoop(void)
 			if ((_poll_fds[i].revents & POLLIN) != 1)
 			{
 				// The socket is not ready for reading
-				// stop here and continue the loop
 				continue ;
 			}
 			printf("[%d] Ready for I/O operation\n", _poll_fds[i].fd);
@@ -166,13 +165,13 @@ void Server::serverLoop(void)
 			if (_poll_fds[i].fd == _fdServer)
 			{
 				// Socket is our listening server socket
-				accept_new_connection(_fdServer, _poll_fds, &_poll_count, &_poll_size);
+				accept_new_connection(_fdServer, &_poll_fds[0], &_poll_count, &_poll_size);
 				// crear los usuarios del server
 			}
 			else
 			{
 				// Socket is a client socket, read it
-				read_data_from_socket(i, _poll_fds, &_poll_count, _fdServer);
+				read_data_from_socket(i, &_poll_fds[0], &_poll_count, _fdServer);
 				// interpretar las acciones de los usuarios
 			}
 		}
@@ -181,6 +180,7 @@ void Server::serverLoop(void)
 
 void Server::initServer(void)
 {
+	struct pollfd	newFd;
 	_fdServer = createServerSocket(_port);
 	if (_fdServer < 0)
 	{
@@ -194,8 +194,10 @@ void Server::initServer(void)
 	}
 	else
 		std::cout << "Listening on port: " << _port << std::endl;
-	_poll_fds[0].fd = _fdServer;
-	_poll_fds[0].events = POLLIN;
+	newFd.fd = _fdServer;
+	newFd.events = POLLIN;
+	newFd.revents = 0;
+	_poll_fds.push_back(newFd);
 	_poll_count = 1;
 	_poll_size = 20;
 }

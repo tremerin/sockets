@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:27 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/23 20:24:51 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:57:08 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iostream>
 # include <map>
+# include <vector>
 # include "Client.hpp"
 # include "sockets.h"
 
@@ -24,17 +25,18 @@ class Server
 {
 private:
 	//server socket creation:
-	int						_fdServer;
-	int						_port;
+	int							_fdServer;
+	int							_port;
 
-	//client sockets:
-	struct pollfd 			_poll_fds[20];
-	int						_poll_size;
-	int						_poll_count;
+	//socket fds:
+	//struct pollfd 			_poll_fds[20];
+	std::vector<struct pollfd>	_poll_fds;
+	int							_poll_size;
+	int							_poll_count;
 
 	//server
-	std::string				_password;
-	std::map<int, Client> 	_users;
+	std::string					_password;
+	std::map<int, Client> 		_users;
 
 public:
 	Server(int port, std::string pass);

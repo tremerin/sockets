@@ -133,9 +133,9 @@ int create_server_socket(void) {
 
 void accept_new_connection(int server_socket, struct pollfd **poll_fds, int *poll_count, int *poll_size)
 {
-	int client_fd;
-	char msg_to_send[BUFSIZ];
-	int status;
+	int		client_fd;
+	char	msg_to_send[BUFSIZ];
+	int		status;
 
 	client_fd = accept(server_socket, NULL, NULL);
 	if (client_fd == -1)
