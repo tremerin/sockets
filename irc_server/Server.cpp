@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:15 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/25 19:15:27 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/27 04:55:30 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ static int createServerSocket(int port)
 		return (-1);
 	}
 	std::cout << "Created server socket fd: " << socket_fd << std::endl;
+	// Config socket to nonblock
+	status = fcntl(socket_fd, F_SETFL, O_NONBLOCK);
+	if (status == -1)
+		std::cerr << "fcntl fail" << std::endl;
 	// Bind socket to address and port
 	status = bind(socket_fd, (struct sockaddr *)&sAddress, sizeof(sAddress));
 	if (status != 0)
@@ -60,11 +64,14 @@ static void accept_new_connection(int server_socket, struct pollfd *poll_fds, in
 	int client_fd;
 	char msg_to_send[BUFSIZ];
 	int status;
-
+	//accept and config socketfd in nonblock mode
 	client_fd = accept(server_socket, NULL, NULL);
+	status = fcntl(client_fd, F_SETFL, O_NONBLOCK);
+	if (status == -1)
+		std::cerr << "fcntl fail" << std::endl;
 	if (client_fd == -1)
 	{
-		fprintf(stderr, "[Server] Accept error: %s\n", strerror(errno));
+		fprintf(stderr, "Accept error: %s\n", strerror(errno));
 		return ;
 	}
 	//add_to_poll_fds(poll_fds, client_fd, poll_count, poll_size);
@@ -140,7 +147,7 @@ void Server::serverLoop(void)
 	while (1)
 	{
  		// Poll sockets to see if they are ready (2 second timeout)
-		status = poll(&_poll_fds[0], _poll_count, 2000);
+		status = poll(&_poll_fds[0], _poll_count, -1);
 		if (status == -1)
 		{
 			std::cout << "Poll error: " << errno << std::endl;

@@ -143,9 +143,9 @@ void Server::SerSocket()
  if(SerSocketFd == -1) //-> check if the socket is created
   throw(std::runtime_error("faild to create socket"));
 
- if(setsockopt(SerSocketFd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1) //-> set the socket option (SO_REUSEADDR) to reuse the address
+ if (setsockopt(SerSocketFd, SOL_SOCKET, SO_REUSEADDR, &en, sizeof(en)) == -1) //-> set the socket option (SO_REUSEADDR) to reuse the address
   throw(std::runtime_error("faild to set option (SO_REUSEADDR) on socket"));
-  if (fcntl(SerSocketFd, F_SETFL, O_NONBLOCK) == -1) //-> set the socket option (O_NONBLOCK) for non-blocking socket
+ if (fcntl(SerSocketFd, F_SETFL, O_NONBLOCK) == -1) //-> set the socket option (O_NONBLOCK) for non-blocking socket
   throw(std::runtime_error("faild to set option (O_NONBLOCK) on socket"));
  if (bind(SerSocketFd, (struct sockaddr *)&add, sizeof(add)) == -1) //-> bind the socket to the address
   throw(std::runtime_error("faild to bind socket"));

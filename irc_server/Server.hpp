@@ -6,7 +6,7 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:27 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/25 17:57:08 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/03/27 02:59:15 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ private:
 	int							_port;
 
 	//socket fds:
-	//struct pollfd 			_poll_fds[20];
 	std::vector<struct pollfd>	_poll_fds;
 	int							_poll_size;
 	int							_poll_count;
