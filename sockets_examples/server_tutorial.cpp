@@ -60,7 +60,10 @@ void Server::ClearClients(int fd)
 	for(size_t i = 0; i < fds.size(); i++)
 	{ 
 		if (fds[i].fd == fd)
-			{fds.erase(fds.begin() + i); break;}
+		{
+			fds.erase(fds.begin() + i); 
+			break;
+		}
  	}
 	// remove the client from the vector of clients
  	for(size_t i = 0; i < clients.size(); i++)
