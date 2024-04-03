@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:57:55 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/04/02 16:21:09 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/04/03 14:12:03 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#ifndef USER_HPP
+# define USER_HPP
 
 # include <iostream>
 # include "sockets.h"
 
-class Client											
+class User											
 {
 private:
 	int         _fd;					    // client file descriptor
 	std::string _iPadd;					    // client ip address
     
 public:
-	Client();
-    ~Client();	
+	User();
+    ~User();	
     									
 	int     getFd();						// getter for fd
 

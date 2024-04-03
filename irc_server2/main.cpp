@@ -6,35 +6,36 @@
 /*   By: fgalan-r <fgalan-r@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 15:58:04 by fgalan-r          #+#    #+#             */
-/*   Updated: 2024/03/29 04:37:28 by fgalan-r         ###   ########.fr       */
+/*   Updated: 2024/04/04 00:52:15 by fgalan-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "Client.hpp"
-
 
 int main(int argc, char **argv)
 {
 	if (argc == 3)
 	{
-		// validar y pasar argumentos
+		//validate argv1,2
 		Server server(4242, argv[2]);
+		std::cout << "---- SERVER ----" << std::endl;
 		try
 		{
-			server.initServer();
+			signal(SIGINT, Server::signalHandler);		// catch the signal (ctrl + c)
+			signal(SIGQUIT, Server::signalHandler); 	// catch the signal (ctrl + \)
+			server.serverInit();						// initialize the server
 		}
 		catch(const std::exception& e)
 		{
-			std::cerr << e.what() << '\n';
+			server.closeFds();							// close the file descriptors
+			std::cerr << e.what() << std::endl;
 		}
-		
-		server.serverLoop();
+		std::cout << "The Server Closed!" << std::endl;
 	}
 	else
 	{
-		std::cout << "error" << std::endl;
+		std::cerr << "error: arguments" << std::endl;
+		return (1);
 	}
-
 	return (0);
 }
